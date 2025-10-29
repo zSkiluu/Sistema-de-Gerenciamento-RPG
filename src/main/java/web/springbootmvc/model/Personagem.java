@@ -1,9 +1,10 @@
 package web.springbootmvc.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
+@Table(name = "personagens")
 public class Personagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,21 +12,20 @@ public class Personagem {
 
     private String nome;
 
-    @ManyToOne
-    @JoinColumn(name = "classe_id")
-    private Classe classe;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id")
+    private Usuario owner;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "jogo_id")
     private Jogo jogo;
 
     @ManyToOne
-    @JoinColumn(name = "jogador_id")
-    private Jogador jogador;
+    @JoinColumn(name = "classe_id")
+    private Classe classe;
 
-    // Inventário (itens que o personagem possui)
-    @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL)
-    private List<Item> inventario;
+    @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<InventarioItem> inventario;
 
     public Long getId() {
         return id;
@@ -43,12 +43,12 @@ public class Personagem {
         this.nome = nome;
     }
 
-    public Classe getClasse() {
-        return classe;
+    public Usuario getOwner() {
+        return owner;
     }
 
-    public void setClasse(Classe classe) {
-        this.classe = classe;
+    public void setOwner(Usuario owner) {
+        this.owner = owner;
     }
 
     public Jogo getJogo() {
@@ -59,19 +59,19 @@ public class Personagem {
         this.jogo = jogo;
     }
 
-    public Jogador getJogador() {
-        return jogador;
+    public Classe getClasse() {
+        return classe;
     }
 
-    public void setJogador(Jogador jogador) {
-        this.jogador = jogador;
+    public void setClasse(Classe classe) {
+        this.classe = classe;
     }
 
-    public List<Item> getInventario() {
+    public Set<InventarioItem> getInventario() {
         return inventario;
     }
 
-    public void setInventario(List<Item> inventario) {
+    public void setInventario(Set<InventarioItem> inventario) {
         this.inventario = inventario;
     }
 }

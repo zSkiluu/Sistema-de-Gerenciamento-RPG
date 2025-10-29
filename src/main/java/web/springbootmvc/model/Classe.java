@@ -1,23 +1,18 @@
 package web.springbootmvc.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
+@Table(name = "classes")
 public class Classe {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
 
-    @ManyToOne
-    @JoinColumn(name = "jogo_id")
-    private Jogo jogo;
-
-    @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
-    private List<Item> itens;
+    private String descricao;
 
     public Long getId() {
         return id;
@@ -35,21 +30,11 @@ public class Classe {
         this.nome = nome;
     }
 
-    public Jogo getJogo() {
-        return jogo;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setJogo(Jogo jogo) {
-        this.jogo = jogo;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
-
-    public List<Item> getItens() {
-        return itens;
-    }
-
-    public void setItens(List<Item> itens) {
-        this.itens = itens;
-    }
-
-    // Getters e Setters
 }

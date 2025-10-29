@@ -1,14 +1,12 @@
 package web.springbootmvc.model;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
-
 import jakarta.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "mestre")
-public class Mestre implements Serializable{
+@DiscriminatorValue("MESTRE")
+@Table(name = "mestres")
+public class Mestre extends Usuario {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -17,8 +15,8 @@ public class Mestre implements Serializable{
     private String login;
     private String senha;
 
-    @OneToMany(mappedBy = "mestre", cascade = CascadeType.ALL)
-    private List<Jogo> jogos;
+    @OneToMany(mappedBy = "mestre", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Jogo> jogosCriados;
 
     public Long getCodigo() {
         return codigo;
@@ -45,20 +43,4 @@ public class Mestre implements Serializable{
         this.senha = senha;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(codigo);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Mestre other = (Mestre) obj;
-		return Objects.equals(codigo, other.codigo);
-    }
 }

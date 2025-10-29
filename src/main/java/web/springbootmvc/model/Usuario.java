@@ -1,32 +1,38 @@
 package web.springbootmvc.model;
-import java.util.Objects;
+
 import jakarta.persistence.*;
 
-public abstract class Usuario {
+@Entity
+@Table(name = "usuarios")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "usuario_tipo", discriminatorType = DiscriminatorType.STRING)
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codigo;
+    private Long id;
 
-    private String nome;
-    private String email;
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    private String senha;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = Role.USUARIO;
+
+    public enum Role { USUARIO, MESTRE }
 
     public Long getId() {
-        return codigo;
+        return id;
     }
-    public void setId(Long codigo) {
-        this.codigo = codigo;
+    public void setId(Long id) {
+        this.id = id;
     }
-    public String getNome() {
-        return nome;
+    public String getUsername() {
+        return username;
     }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
     public String getSenha() {
         return senha;
@@ -34,22 +40,10 @@ public abstract class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-    private String senha;
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(codigo);
+    public Role getRole() {
+        return role;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Usuario other = (Usuario) obj;
-		return Objects.equals(codigo, other.codigo);
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

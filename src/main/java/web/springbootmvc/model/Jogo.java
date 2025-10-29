@@ -1,38 +1,41 @@
 package web.springbootmvc.model;
 
 import jakarta.persistence.*;
-import java.util.List;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
+import java.util.Set;
 
 @Entity
+@Table(name = "jogos")
 public class Jogo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long codigo;
+    private Long id;
 
     private String nome;
-    private boolean ativo;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "mestre_id")
+    private Usuario mestre; // o criador do jogo (role=MESTRE)
 
     @ManyToMany
-    @JoinColumn(name = "mestre_id")
-    private Mestre mestre;
+    @JoinTable(name = "jogo_classes",
+        joinColumns = @JoinColumn(name = "jogo_id"),
+        inverseJoinColumns = @JoinColumn(name = "classe_id"))
+    private Set<Classe> allowedClasses;
 
-    @OneToMany(mappedBy = "jogo", cascade = CascadeType.ALL)
-    private List<Classe> classesDisponiveis;
+    @ManyToMany
+    @JoinTable(name = "jogo_itens",
+        joinColumns = @JoinColumn(name = "jogo_id"),
+        inverseJoinColumns = @JoinColumn(name = "item_id"))
+    private Set<Item> allowedItems;
 
+    private String descricao;
 
-    @OneToMany(mappedBy = "jogo", cascade = CascadeType.ALL)
-    private List<Item> itensPermitidos;
-
-    @OneToMany(mappedBy = "jogo", cascade = CascadeType.ALL)
-    private List<Personagem> personagens;
-
-    public long getCodigo() {
-        return codigo;
+    public Long getId() {
+        return id;
     }
 
-    public void setCodigo(long codigo) {
-        this.codigo = codigo;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -43,45 +46,35 @@ public class Jogo {
         this.nome = nome;
     }
 
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
-
-    public Mestre getMestre() {
+    public Usuario getMestre() {
         return mestre;
     }
 
-    public void setMestre(Mestre mestre) {
+    public void setMestre(Usuario mestre) {
         this.mestre = mestre;
     }
 
-    public List<Classe> getClassesDisponiveis() {
-        return classesDisponiveis;
+    public Set<Classe> getAllowedClasses() {
+        return allowedClasses;
     }
 
-    public void setClassesDisponiveis(List<Classe> classesDisponiveis) {
-        this.classesDisponiveis = classesDisponiveis;
+    public void setAllowedClasses(Set<Classe> allowedClasses) {
+        this.allowedClasses = allowedClasses;
     }
 
-    public List<Item> getItensPermitidos() {
-        return itensPermitidos;
+    public Set<Item> getAllowedItems() {
+        return allowedItems;
     }
 
-    public void setItensPermitidos(List<Item> itensPermitidos) {
-        this.itensPermitidos = itensPermitidos;
+    public void setAllowedItems(Set<Item> allowedItems) {
+        this.allowedItems = allowedItems;
     }
 
-    public List<Personagem> getPersonagens() {
-        return personagens;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setPersonagens(List<Personagem> personagens) {
-        this.personagens = personagens;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
-
-    
 }
